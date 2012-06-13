@@ -591,6 +591,12 @@ class MemcachedClient(object):
 
 
 class VBucketAwareMembaseClient(object):
+    def __exit__(self, type, value, traceback):
+        self.done()
+
+    def __enter__(self):
+        return self
+
     #poll server every few seconds to see if the vbucket-map
     #has changes
     def __init__(self, url, bucket, password, verbose=False):
@@ -979,7 +985,6 @@ class MemcachedClientHelper(object):
         vBuckets = bucket_info.vbuckets
         for node in bucket_info.nodes:
             if node.ip == ip:
-                print node.memcached
                 client = MemcachedClient(ip, node.memcached)
                 client.vbucket_count = len(vBuckets)
                 client.sasl_auth_plain(bucket_info.name.encode('ascii'),
