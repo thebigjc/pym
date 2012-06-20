@@ -619,6 +619,7 @@ class VBucketAwareMembaseClient(object):
         self.__init__vbucket_map(self.rest, bucket, -1)
         self.dispatcher = CommandDispatcher(self)
         self.dispatcher_thread = Thread(name="dispatcher-thread", target=self._start_dispatcher)
+        self.dispatcher_thread.daemon = True
         self.dispatcher_thread.start()
         self.vbucket_count = 1024
         self.verbose = verbose
